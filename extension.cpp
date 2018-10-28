@@ -87,21 +87,9 @@ DETOUR_DECL_MEMBER1(CTerrorGameRules__CalculateSurvivalMultiplier, int ,char,sur
 
 DETOUR_DECL_MEMBER1(WitchAttack__WitchAttack, void* ,CBaseEntity*,pEntity)
 {
-	int client=gamehelpers->IndexOfEdict(gameents->BaseEntityToEdict((CBaseEntity*)pEntity));
-	IGamePlayer *player = playerhelpers->GetGamePlayer(client);
-	if (player)
-	{
-		g_pSM->LogMessage(myself,"WitchAttack created for client %s.",player->GetName());	
-	}
-	else
-	{
-		g_pSM->LogMessage(myself,"WitchAttack created for %d entity.",client);
-	}
-
 	void*result=DETOUR_MEMBER_CALL(WitchAttack__WitchAttack)(pEntity);
 
 	DWORD*CharId=((DWORD *)this + g_WitchACharasterOffset);
-	g_pSM->LogMessage(myself,"WitchAttack char=%d.",*CharId);
 	*CharId=8;
 
 	return result;
@@ -111,8 +99,8 @@ DETOUR_DECL_MEMBER0(WitchAttack__GetVictim, void*)
 {
 	void*result = DETOUR_MEMBER_CALL(WitchAttack__GetVictim)();
 
-	DWORD*CharId = ((DWORD *)this + g_WitchACharasterOffset);
-	*CharId = 8;
+	DWORD*CharId=((DWORD *)this + g_WitchACharasterOffset);
+	*CharId=8;
 
 	return result;
 }
