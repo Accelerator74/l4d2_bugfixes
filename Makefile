@@ -6,14 +6,14 @@ HX_METAMOD = ../mmsource
 # l4d2_bugfixes.ext.so
 #
 HX_INCLUDE = -I. \
-	-I$(HX_SDKL4D2)/public/game/server \
 	-I$(HX_SDKL4D2)/public \
-	-I$(HX_SDKL4D2)/public/engine \
 	-I$(HX_SDKL4D2)/public/tier0 \
 	-I$(HX_SDKL4D2)/public/tier1 \
 	-I$(HX_METAMOD)/core \
 	-I$(HX_METAMOD)/core/sourcehook \
 	-I$(HX_SOURCEMOD)/public \
+	-I$(HX_SOURCEMOD)/public/CDetour \
+	-I$(HX_SOURCEMOD)/public/asm \
 	-I$(HX_SOURCEMOD)/sourcepawn/include
 #
 HX_QWERTY = -D_LINUX \
@@ -69,14 +69,13 @@ HX_L4D2 = -DSOURCE_ENGINE=9 \
 #
 all:
 	mkdir -p l4d2_release
-	ln -sf $(HX_SOURCEMOD)/public/smsdk_ext.cpp
 	ln -sf $(HX_SDKL4D2)/lib/linux/libvstdlib_srv.so libvstdlib_srv.so;
 	ln -sf $(HX_SDKL4D2)/lib/linux/libtier0_srv.so libtier0_srv.so;
 #
-	gcc $(HX_INCLUDE) $(HX_QWERTY) $(CPP_FLAGS) $(HX_L4D2) -o l4d2_release/smsdk_ext.o -c smsdk_ext.cpp
-	gcc $(HX_INCLUDE) $(HX_QWERTY) $(CPP_FLAGS) $(HX_L4D2) -o l4d2_release/detours.o -c CDetour/detours.cpp
+	gcc $(HX_INCLUDE) $(HX_QWERTY) $(CPP_FLAGS) $(HX_L4D2) -o l4d2_release/smsdk_ext.o -c $(HX_SOURCEMOD)/public/smsdk_ext.cpp
+	gcc $(HX_INCLUDE) $(HX_QWERTY) $(CPP_FLAGS) $(HX_L4D2) -o l4d2_release/detours.o -c $(HX_SOURCEMOD)/public/CDetour/detours.cpp
 	gcc $(HX_INCLUDE) $(HX_QWERTY) $(CPP_FLAGS) $(HX_L4D2) -o l4d2_release/extension.o -c extension.cpp
 #
-	gcc $(HX_SO) $(HX_SDKL4D2)/lib/linux/tier1_i486.a $(HX_SDKL4D2)/lib/linux/mathlib_i486.a asm/asm.c libvstdlib_srv.so libtier0_srv.so -static-libgcc -shared -m32 -lm -ldl -o l4d2_release/l4d2_bugfixes.ext.so
+	gcc $(HX_SO) $(HX_SDKL4D2)/lib/linux/tier1_i486.a $(HX_SDKL4D2)/lib/linux/mathlib_i486.a $(HX_SOURCEMOD)/public/asm/asm.c libvstdlib_srv.so libtier0_srv.so -static-libgcc -shared -m32 -lm -ldl -o l4d2_release/l4d2_bugfixes.ext.so
 #
 	rm -rf l4d2_release/*.o
