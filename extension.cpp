@@ -10,6 +10,7 @@ float fChargerVictimTime[L4D_MAX_PLAYERS+1];
 
 CDetour *Detour_WitchAttack__Create = NULL;
 CDetour *Detour_WitchAttack__GetVictim = NULL;
+CDetour *Detour_CDirector__AllowWitchesInCheckpoints = NULL;
 CDetour *Detour_HandleCustomCollision = NULL;
 CDetour *Detour_CTerrorGameRules__CalculateSurvivalMultiplier = NULL;
 tCDirector__AreTeamsFlipped CDirector__AreTeamsFlipped;
@@ -103,6 +104,11 @@ DETOUR_DECL_MEMBER0(WitchAttack__GetVictim, void*)
 	*CharId=8;
 
 	return result;
+}
+
+DETOUR_DECL_MEMBER0(CDirector__AllowWitchesInCheckpoints, bool)
+{
+	return true;
 }
 
 DETOUR_DECL_MEMBER5(CCharge__HandleCustomCollision, int ,CBaseEntity *,pEntity, Vector  const&, v1, Vector  const&, v2, CGameTrace *, gametrace, void *,movedata)
@@ -222,6 +228,15 @@ bool BugFixes::SetupHooks()
 		RemoveHooks();
 		return false;
 	}
+	Detour_CDirector__AllowWitchesInCheckpoints = DETOUR_CREATE_MEMBER(CDirector__AllowWitchesInCheckpoints, "CDirector::AllowWitchesInCheckpoints");
+	if (Detour_CDirector__AllowWitchesInCheckpoints) {
+		Detour_CDirector__AllowWitchesInCheckpoints->EnableDetour();
+	}
+	else {
+		g_pSM->LogError(myself, "Cannot find signature of CDirector::AllowWitchesInCheckpoints");
+		RemoveHooks();
+		return false;
+	}
 
 	//score fix hooks
 	Detour_CTerrorGameRules__CalculateSurvivalMultiplier=DETOUR_CREATE_MEMBER(CTerrorGameRules__CalculateSurvivalMultiplier, "CTerrorGameRules::CalculateSurvivalMultiplier");
@@ -257,6 +272,10 @@ void BugFixes::RemoveHooks()
 	if (Detour_WitchAttack__GetVictim){
 		Detour_WitchAttack__GetVictim->Destroy();
 		Detour_WitchAttack__GetVictim = NULL;
+	}
+	if (Detour_CDirector__AllowWitchesInCheckpoints){
+		Detour_CDirector__AllowWitchesInCheckpoints->Destroy();
+		Detour_CDirector__AllowWitchesInCheckpoints = NULL;
 	}
 	if (Detour_CTerrorGameRules__CalculateSurvivalMultiplier){
 		Detour_CTerrorGameRules__CalculateSurvivalMultiplier->Destroy();

@@ -11,7 +11,7 @@
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"[L4D2] 8+ Players BugFixes"
 #define SMEXT_CONF_DESCRIPTION		"This extension try fix some bugs on server have more than 8 players"
-#define SMEXT_CONF_VERSION		"1.0.5"
+#define SMEXT_CONF_VERSION		"1.0.6"
 #define SMEXT_CONF_AUTHOR		"V10, Accelerator"	   
 #define SMEXT_CONF_URL			"https://github.com/Accelerator74/l4d2_bugfixes"
 #define SMEXT_CONF_LOGTAG		"BugFixes"
