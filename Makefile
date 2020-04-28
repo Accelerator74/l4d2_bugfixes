@@ -1,6 +1,6 @@
 # Makefile
 HX_SOURCEMOD = ../sourcemod
-HX_SDKL4D2 = ../hl2sdk
+HX_SDKL4D2 = ../hl2sdk-l4d2
 HX_METAMOD = ../mmsource
 #
 # l4d2_bugfixes.ext.so
